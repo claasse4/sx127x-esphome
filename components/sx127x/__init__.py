@@ -4,7 +4,7 @@ from esphome.components import spi
 from esphome.const import *
 from esphome import pins
 
-CODEOWNERS = ["@coen"]
+CODEOWNERS = ["@claasse4"]
 
 sx127x_ns = cg.esphome_ns.namespace("sx127x")
 SX127xComponent = sx127x_ns.class_("SX127xComponent", cg.Component, spi.SPIDevice)
