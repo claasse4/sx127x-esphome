@@ -2,6 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import spi
 from esphome.const import *
+from esphome import pins
 
 CODEOWNERS = ["@coen"]
 
@@ -10,12 +11,15 @@ SX127xComponent = sx127x_ns.class_("SX127xComponent", cg.Component, spi.SPIDevic
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(SX127xComponent),
-    cv.Required("cs_pin"): cv.pin,
-    cv.Required("rst_pin"): cv.pin,
-    cv.Required("dio0_pin"): cv.pin,
+
+    cv.Required("cs_pin"): pins.gpio_output_pin_schema,
+    cv.Required("rst_pin"): pins.gpio_output_pin_schema,
+    cv.Required("dio0_pin"): pins.gpio_input_pin_schema,
+
     cv.Required("frequency"): cv.int_range(min=100000000, max=1000000000),
     cv.Required("modulation"): cv.one_of("OOK", "FSK"),
     cv.Required("bitsync"): cv.boolean,
+
     cv.Optional("packet_mode", default=True): cv.boolean,
     cv.Optional("rx_start", default=False): cv.boolean,
     cv.Optional("rx_floor", default=-90): cv.int_,
@@ -32,6 +36,7 @@ async def to_code(config):
     cg.add(var.set_cs_pin(config["cs_pin"]))
     cg.add(var.set_rst_pin(config["rst_pin"]))
     cg.add(var.set_dio0_pin(config["dio0_pin"]))
+
     cg.add(var.set_frequency(config["frequency"]))
     cg.add(var.set_modulation(config["modulation"]))
     cg.add(var.set_bitsync(config["bitsync"]))
